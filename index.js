@@ -5,9 +5,7 @@ const app = express();
 app.use(cors());
 
 app.get("/", (req, res) => {
-	res.json({
-		message: "Welcome to the application",
-	});
+	res.json("Welcome to the application");
 });
 
 const port =
