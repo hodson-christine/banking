@@ -1,8 +1,8 @@
 const mongodb = require('mongodb');
 const mongoose = require("mongoose");
 
-const mongoConnect = () =>{
-	mongoose.connect('mongodb+srv://christine:Kbug@223@cluster0.v0hb6.mongodb.net/myFirstDatabase?retryWrites=true&w=majority',
+const mongoConnect = async () =>{
+	await mongoose.connect('mongodb+srv://christine:Kbug@223@cluster0.v0hb6.mongodb.net/myFirstDatabase?retryWrites=true&w=majority',
      {
          useNewUrlParser: true,
          useUnifiedTopology: true,

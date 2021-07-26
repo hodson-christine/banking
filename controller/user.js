@@ -1,10 +1,9 @@
 let userModel = require("../models/user");
-const router = require("../routes/user");
 
-exports.createUser = (req, res) => {
+exports.createUser = async (req, res) => {
   let { email } = req.body;
 
-  userModel.findOne({ email: email }).then((emailExists) => {
+ await userModel.findOne({ email: email }).then((emailExists) => {
     if (emailExists) {
       res.send({ message: "email exists" });
     } else {
@@ -21,8 +20,8 @@ exports.createUser = (req, res) => {
   });
 };
 
-exports.fetchUser = (req, res) => {
-  userModel.find().then((getUsers) => {
+exports.fetchUser = async (req, res) => {
+ await  userModel.find().then((getUsers) => {
     if (getUsers) {
       res.status(200).send({ message: "all users", getUsers });
     } else {
@@ -31,9 +30,9 @@ exports.fetchUser = (req, res) => {
   });
 };
 
-exports.login = (req, res) => {
+exports.login = async (req, res) => {
   let { email, password } = req.body;
-  userModel.findOne({ email, password }).then((results) => {
+  await userModel.findOne({ email, password }).then((results) => {
    if(results){
      res.status(200).send({message : "logged in ", results})
    }else{
