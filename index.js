@@ -16,4 +16,15 @@ const port =
 const server = app.listen(port, function () {
   console.log("Server listening on port " + port);
 });
- mongoConnect();
+
+mongoose.connect(
+  process.env.MONGODB_URI ||
+    "mongodb+srv://christine:Kbug@223@cluster0.v0hb6.mongodb.net/myFirstDatabase?retryWrites=true&w=majority",
+  {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  }
+);
+mongoose.connection.on("connected", ()=>{
+	console.log("moongoose is connected")
+})
