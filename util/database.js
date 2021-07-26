@@ -1,7 +1,7 @@
 const mongodb = require('mongodb');
 const mongoose = require("mongoose");
 
-const mongoConnect = callback =>{
+const mongoConnect = () =>{
 	mongoose.connect('mongodb+srv://christine:Kbug@223@cluster0.v0hb6.mongodb.net/myFirstDatabase?retryWrites=true&w=majority',
      {
          useNewUrlParser: true,
@@ -11,7 +11,7 @@ const mongoConnect = callback =>{
         })
 	.then(client =>{
 		console.log('Database connected Successfully!');
-		callback(client);
+		// callback(client);
 	})
 	.catch(err =>{
 		console.log(err);

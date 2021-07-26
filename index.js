@@ -2,48 +2,21 @@ const express = require("express");
 const cors = require("cors");
 const mongoose = require("mongoose");
 const userModel = require("./models/user.js");
-const mongoConnect = require('./util/database')
+const mongoConnect = require("./util/database");
+let userRouter = require("./routes/user")
 
 const app = express();
 app.use(cors());
+app.use(express.json())
 
-app.get("/", (req, res) => {
-	res.json("Welcome to the application");
-});
+app.use(userRouter)
 
-
-const userDummyData = {
-	email: "samuel.azumah@gmail.com",
-	password: "123456",
-};
-
-const savedUser = new userModel(userDummyData);
-savedUser.save().then((savedUser) => {
-	if (savedUser) {
-		console.log(savedUser);
-	} else {
-		console.log("not saved");
-	}
-});
-
-// mongoose.connect(
-// 	"mongodb://localhost:27017/banking",
-// 	{ useNewUrlParser: true, useUnifiedTopology: true },
-// 	(error) => {
-// 		const connectionStatus = !error
-// 			? "Success"
-// 			: "Error Connecting to database";
-// 		console.log(connectionStatus);
-// 	}
-// );
 
 
 const port =
-	process.env.NODE_ENV === "production" ? process.env.PORT || 80 : 4000;
+  process.env.NODE_ENV === "production" ? process.env.PORT || 80 : 4000;
 const server = app.listen(port, function () {
-	console.log("Server listening on port " + port);
+  console.log("Server listening on port " + port);
 });
 
-mongoConnect(client => {
-	console.log(client);
-});
+mongoConnect();
