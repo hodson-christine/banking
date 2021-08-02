@@ -17,6 +17,7 @@ const server = app.listen(port, function () {
 	console.log("Server listening on port " + port);
 });
 
+const uri = process.env.MONGODB_URI;
 const connectToDb =
 	"mongodb+srv://christine:Kbug@223@cluster0.v0hb6.mongodb.net/myFirstDatabase?retryWrites=true&w=majority";
 mongoose.connect(connectToDb, {
