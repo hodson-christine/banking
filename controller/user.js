@@ -1,4 +1,7 @@
 let userModel = require("../models/user");
+let auth = require("../auth.secret");
+let jwt = require("jsonwebtoken");
+let user_token;
 
 exports.createUser = async (req, res) => {
 	let { email } = req.body;
@@ -33,8 +36,18 @@ exports.fetchUser = (req, res) => {
 exports.login = async (req, res) => {
 	let { email, password } = req.body;
 	await userModel.findOne({ email, password }).then((results) => {
+		jwt.sign(
+			{ results },
+			auth.secreteKey,
+			{ expiresIn: "1h" },
+			(error, token) => {
+				user_token = token;
+				return user_token;
+			}
+		);
+
 		if (results) {
-			res.status(200).send({ message: "logged in ", results });
+			res.status(200).send({ message: "logged in ", user_token, results });
 		} else {
 			res.status(400).send({ message: "not logged in" });
 		}
