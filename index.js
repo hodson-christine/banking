@@ -1,8 +1,6 @@
 const express = require("express");
 const cors = require("cors");
 const mongoose = require("mongoose");
-const userModel = require("./models/user.js");
-const mongoConnect = require("./util/database");
 let userRouter = require("./routes/user");
 
 const app = express();
