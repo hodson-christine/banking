@@ -20,10 +20,16 @@ const server = app.listen(port, function () {
 const uri = process.env.MONGODB_URI;
 const connectToDb =
 	"mongodb+srv://christine:Kbug@223@cluster0.v0hb6.mongodb.net/myFirstDatabase?retryWrites=true&w=majority";
-mongoose.connect(connectToDb, {
-	useNewUrlParser: true,
-	useUnifiedTopology: true,
-});
+mongoose.connect(
+	uri ===
+		"mongodb+srv://christine:Kbug@223@cluster0.v0hb6.mongodb.net/myFirstDatabase?retryWrites=true&w=majority"
+		? connectToDb
+		: connectToDb,
+	{
+		useNewUrlParser: true,
+		useUnifiedTopology: true,
+	}
+);
 mongoose.connection.on("connected", () => {
 	console.log("moongoose is connected");
 });
