@@ -18,10 +18,7 @@ const server = app.listen(port, function () {
 });
 
 const connectToDb =
-	process.env.MONGODB_URI ===
-	"mongodb+srv://christine:Kbug@223@cluster0.v0hb6.mongodb.net/myFirstDatabase?retryWrites=true&w=majority"
-		? "mongodb+srv://christine:Kbug@223@cluster0.v0hb6.mongodb.net/myFirstDatabase?retryWrites=true&w=majority"
-		: "mongodb+srv://christine:Kbug@223@cluster0.v0hb6.mongodb.net/myFirstDatabase?retryWrites=true&w=majority";
+	"mongodb+srv://christine:Kbug@223@cluster0.v0hb6.mongodb.net/myFirstDatabase?retryWrites=true&w=majority";
 mongoose.connect(connectToDb, {
 	useNewUrlParser: true,
 	useUnifiedTopology: true,
