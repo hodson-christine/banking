@@ -8,7 +8,7 @@ exports.createUser = async (req, res) => {
 
 	await userModel.findOne({ email: email }).then((emailExists) => {
 		if (emailExists) {
-			res.send({ message: "email exists" });
+			res.status(400).send({ message: "email exists" });
 		} else {
 			let userData = req.body;
 			const savedUser = new userModel(userData);
@@ -41,15 +41,12 @@ exports.login = async (req, res) => {
 			auth.secreteKey,
 			{ expiresIn: "1h" },
 			(error, token) => {
-				user_token = token;
-				return user_token;
+				if (results) {
+					res.status(200).send({ message: "logged in ", token, results });
+				} else {
+					res.status(400).send({ message: "not logged in" });
+				}
 			}
 		);
-
-		if (results) {
-			res.status(200).send({ message: "logged in ", user_token, results });
-		} else {
-			res.status(400).send({ message: "not logged in" });
-		}
 	});
 };
