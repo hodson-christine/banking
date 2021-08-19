@@ -79,8 +79,15 @@ exports.changePassword = (req, res) => {
 		userModel.findById(req.params.id).then(async (results) => {
 			results.password = password;
 			await results.save();
-			let message = `updated`;
-			res.status(200).json({ message, results });
+			jwt.sign(
+				{ results },
+				auth.secreteKey,
+				{ expiresIn: "1h" },
+				(error, token) => {
+					let message = `updated`;
+					res.status(200).json({ message, results, token });
+				}
+			);
 		});
 	});
 };
