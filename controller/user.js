@@ -69,8 +69,8 @@ exports.forgotPassword = async (req, res) => {
 
 exports.changePassword = (req, res) => {
 	let id = { _id: req.params.id };
-	let { email, password, firstname } = req.body;
-	userModel.updateOne(id, (email, password, firstname), (err, results) => {
+	let { password } = req.body;
+	userModel.updateOne(id, password, (err, results) => {
 		if (err)
 			res.status(500).json({
 				message: "not updated",
@@ -78,8 +78,6 @@ exports.changePassword = (req, res) => {
 			});
 		userModel.findById(req.params.id).then(async (results) => {
 			results.password = password;
-			results.email = email;
-			results.firstname = firstname;
 			await results.save();
 			let message = `updated`;
 			res.status(200).json({ message, results });
