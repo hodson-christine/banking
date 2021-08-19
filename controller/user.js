@@ -1,22 +1,25 @@
 let userModel = require("../models/user");
 let auth = require("../auth.secret");
 let jwt = require("jsonwebtoken");
-let user_token;
 
 exports.createUser = async (req, res) => {
 	let { email } = req.body;
-
-	await userModel.findOne({ email: email }).then((emailExists) => {
+	await userModel.findOne({ email }).then((emailExists) => {
 		if (emailExists) {
-			res.status(400).send({ message: "email exists" });
+			return res.status(400).send({ message: "email exists" });
 		} else {
-			let userData = req.body;
-			const savedUser = new userModel(userData);
+			const userData = ({ email, password, firstname, lastname } = req.body);
+
+			let savedUser = new userModel(userData);
+			savedUser.email = email.toLowerCase();
 			savedUser.save().then((savedUser) => {
+				console.log(savedUser);
 				if (savedUser) {
-					res.status(200).send({ message: "saved successfully", savedUser });
+					return res
+						.status(200)
+						.send({ message: "saved successfully", savedUser });
 				} else {
-					res.status(400).send({ message: "not saved" });
+					return res.status(400).send({ message: "not saved" });
 				}
 			});
 		}
@@ -42,11 +45,44 @@ exports.login = async (req, res) => {
 			{ expiresIn: "1h" },
 			(error, token) => {
 				if (results) {
-					res.status(200).send({ message: "logged in ", token, results });
+					res.status(200).send({ message: "logged in ", results, token });
 				} else {
 					res.status(400).send({ message: "not logged in" });
 				}
 			}
 		);
+	});
+};
+
+exports.forgotPassword = async (req, res) => {
+	const email = req.body.email;
+	await userModel.findOne({ email }).then((userData) => {
+		if (userData) {
+			return res
+				.status(200)
+				.send({ message: "user details (forgot password)", userData });
+		} else {
+			return res.status(400).send({ message: "Email not found!" });
+		}
+	});
+};
+
+exports.changePassword = (req, res) => {
+	let id = { _id: req.params.id };
+	let { email, password, firstname } = req.body;
+	userModel.updateOne(id, (email, password, firstname), (err, results) => {
+		if (err)
+			res.status(500).json({
+				message: "not updated",
+				err: err,
+			});
+		userModel.findById(req.params.id).then(async (results) => {
+			results.password = password;
+			results.email = email;
+			results.firstname = firstname;
+			await results.save();
+			let message = `updated`;
+			res.status(200).json({ message, results });
+		});
 	});
 };
