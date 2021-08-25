@@ -1,6 +1,43 @@
 let userModel = require("../models/user");
+const transactionModel = require("../models/transaction-history");
 let auth = require("../auth.secret");
 let jwt = require("jsonwebtoken");
+
+exports.makeTransaction = (req, res) => {
+	const userId = req.params.id;
+	let transactionData = ({
+		purpose,
+		amount,
+		accountNumber,
+		status,
+		user,
+		transfer,
+		country,
+	} = req.body);
+	userModel.findById(userId).then(async (results) => {
+		if (results) {
+			transactionData.userId = userId;
+			const savedTransaction = new transactionModel(transactionData);
+			await savedTransaction.save().then((success) => {
+				success
+					? res.status(200).send({ message: "transaction made", success })
+					: res.status(400).json({ message: "not found" });
+			});
+		}
+	});
+};
+
+exports.getTransactions = (req, res) => {
+	const id = req.params.userId;
+	transactionModel.find().then((allTransactions) => {
+		const myTransactions = allTransactions.filter(
+			(myTransaction) => myTransaction.userId === id
+		);
+		myTransactions.length > 0
+			? res.status(200).send({ message: "my transactions", myTransactions })
+			: res.status(400).send({ message: "no transactions" });
+	});
+};
 
 exports.createUser = async (req, res) => {
 	let { email } = req.body;
@@ -9,11 +46,9 @@ exports.createUser = async (req, res) => {
 			return res.status(400).send({ message: "email exists" });
 		} else {
 			const userData = ({ email, password, firstname, lastname } = req.body);
-
 			let savedUser = new userModel(userData);
 			savedUser.email = email.toLowerCase();
 			savedUser.save().then((savedUser) => {
-				console.log(savedUser);
 				if (savedUser) {
 					return res
 						.status(200)
