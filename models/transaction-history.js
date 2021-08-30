@@ -6,6 +6,10 @@ let mm = String(today.getMonth() + 1).padStart(2, "0"); //January is 0!
 let yyyy = today.getFullYear();
 today = mm + "/" + dd + "/" + yyyy;
 
+function newDate() {
+	return new Date();
+}
+
 let userSchema = mongoose.Schema({
 	country: {
 		type: String,
@@ -54,7 +58,7 @@ let userSchema = mongoose.Schema({
 	},
 	dateCreated: {
 		type: String,
-		default: new Date(),
+		default: newDate(),
 	},
 });
 
