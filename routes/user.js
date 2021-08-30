@@ -9,4 +9,5 @@ router.post("/changepassword/:id", userController.changePassword);
 router.post("/forgotpassword", userController.forgotPassword);
 router.post("/transfermoney/:id", userController.makeTransaction);
 router.get("/alltransactions/:userId", userController.getTransactions);
+router.post("/updatestatus/:id", userController.updateTransactionStatus);
 module.exports = router;

@@ -28,15 +28,20 @@ exports.makeTransaction = (req, res) => {
 };
 
 exports.getTransactions = (req, res) => {
+	const query = {};
+	const sort = { dateCreated: -1 };
 	const id = req.params.userId;
-	transactionModel.find().then((allTransactions) => {
-		const myTransactions = allTransactions.filter(
-			(myTransaction) => myTransaction.userId === id
-		);
-		myTransactions.length > 0
-			? res.status(200).send({ message: "my transactions", myTransactions })
-			: res.status(400).send({ message: "no transactions" });
-	});
+	transactionModel
+		.find(query)
+		.sort(sort)
+		.then((allTransactions) => {
+			const myTransactions = allTransactions.filter(
+				(myTransaction) => myTransaction.userId === id
+			);
+			myTransactions.length > 0
+				? res.status(200).send({ message: "my transactions", myTransactions })
+				: res.status(400).send({ message: "no transactions" });
+		});
 };
 
 exports.createUser = async (req, res) => {
@@ -125,4 +130,23 @@ exports.changePassword = (req, res) => {
 			);
 		});
 	});
+};
+
+exports.updateTransactionStatus = async (req, res) => {
+	await transactionModel
+		.findById(req.params.id)
+		.then(async (transactionInfo) => {
+			if (!transactionInfo) {
+				return res.status(500).send({ message: "not updated" });
+			} else {
+				transactionInfo.status = "Cancelled";
+				await transactionInfo.save().then((update) => {
+					if (!update) {
+						return res.status(500).send({ message: "not updated" });
+					} else {
+						return res.status(200).send({ update, message: "updated" });
+					}
+				});
+			}
+		});
 };
