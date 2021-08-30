@@ -54,7 +54,7 @@ let userSchema = mongoose.Schema({
 	},
 	dateCreated: {
 		type: String,
-		default: today,
+		default: new Date(),
 	},
 });
 
